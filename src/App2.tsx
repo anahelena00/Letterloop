@@ -13,7 +13,7 @@ export default function App() {
   //alert('App2 is running!');
   // 1. Declare all state variables (including loading!)
   const [groups, setGroups] = useState<Group[]>([]);
-  const [activeGroup, setActiveGroup] = useState<string>('');
+  const [activeGroup, setActiveGroup] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(true); // 👈 declared right here!
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   // 2. Fetch loops from Supabase when the app starts
@@ -38,7 +38,9 @@ export default function App() {
             iconText: item.icon_text, // maps database snake_case to your React camelCase
           }));
           setGroups(formatted);
-          if (formatted.length > 0) setActiveGroup(formatted[0].id);
+          //Check if the data base has returned any loops. 
+          //If not do nothing so that it doesn't crash.
+          if (formatted.length > 0) setActiveGroup([formatted[0].id]);
         }
       } catch (err: any) {
         //treat err as any type of object it can safely read its .message property without you blocking the build
@@ -131,16 +133,27 @@ export default function App() {
           <button
             key={group.id}
             className={`group-circle-btn ${
-              /* our button class*/
-              activeGroup === group.id ? 'active' : ''
+              /* our button class. 
+              .includes() searches inside our array of selected ID
+
+              If group.id is in activeGroups
+              , it returns true and adds the 'active' class
+              
+              ?= if yes(true) do this, : '' =  else(false) do that */
+              activeGroup.includes(group.id) ? 'active' : ''
             }`}
             //onClick={() => setActiveGroup(group.id)}
-            
+
             onClick={() => {
-              if (activeGroup === group.id) {
-                setActiveGroup(''); // Se clicar no mesmo, desmarca
+              if (activeGroup.includes(group.id)) {
+                //setActiveGroup(''); //Se clicar no mesmo, desmarca
+                // filter goes through my array and asks what is inside ()
+                // (id) is a variable. (id) => For every x in line temporarily call it id
+                //id !== group.id is this different from any id in group.id in activeGroups?
+                setActiveGroup(activeGroup.filter((id) => id !== group.id))
               } else {
-                setActiveGroup(group.id); // Se clicar em outro, marca o novo
+                setActiveGroup(activeGroup.concat(group.id));
+                //setActiveGroup(group.id); // Se clicar em outro, marca o novo
               }
             }}
 
@@ -169,7 +182,14 @@ export default function App() {
       {/* 3. Main Action Workspace */}
       <main className="workspace">
         <div className="card">
-          <h2>Sending to: {groups.find((g) => g.id === activeGroup)?.name}</h2>
+          <h2>
+            Sending to: {
+              activeGroup.length > 0
+                ? groups
+                  .filter((g) => activeGroup.includes(g.id)).map((g) => g.name).join(', '): 'No loops selected'
+                  }
+          </h2>
+          {/*<h2>Sending to: {groups.find((g) => g.id === activeGroup)?.name}</h2>*/}
           <p className="prompt">
             💡 What was your favorite moment this week? Write it down below.
           </p>

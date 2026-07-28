@@ -39,7 +39,7 @@
 
   &.active .group-icon {
     /*border-color: #0070f3 !important;  Azul selecionado */
-    box-shadow: 0 0 0 3px rgba(14, 62, 117, 0.711); /* Auréola azul */
+    box-shadow: 0 0 0 3px rgba(56, 138, 231, 0.393); /* Auréola azul */
   }
 
   &:focus-visible .group-icon {
