@@ -29,9 +29,17 @@
     transition: border-color 0.3s;
   }
 
-  &:hover .group-icon,
+  /*&:hover .group-icon,
   &.active .group-icon {
     border-color: var(--accent-border);
+  }*/
+  &:hover:not(.active) .group-icon { 
+    border-color: var(--accent-border); /* Roxo do tema */
+  }
+
+  &.active .group-icon {
+    /*border-color: #0070f3 !important;  Azul selecionado */
+    box-shadow: 0 0 0 3px rgba(14, 62, 117, 0.711); /* Auréola azul */
   }
 
   &:focus-visible .group-icon {

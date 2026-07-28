@@ -134,7 +134,16 @@ export default function App() {
               /* our button class*/
               activeGroup === group.id ? 'active' : ''
             }`}
-            onClick={() => setActiveGroup(group.id)}
+            //onClick={() => setActiveGroup(group.id)}
+            
+            onClick={() => {
+              if (activeGroup === group.id) {
+                setActiveGroup(''); // Se clicar no mesmo, desmarca
+              } else {
+                setActiveGroup(group.id); // Se clicar em outro, marca o novo
+              }
+            }}
+
             title={group.name}
           >
             <span className="group-icon">{group.iconText}</span>
